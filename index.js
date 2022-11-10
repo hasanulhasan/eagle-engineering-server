@@ -46,7 +46,7 @@ async function run() {
       res.send(service);
     });
 
-    //review api 
+    //review api for posting
     app.post('/reviews', async (req, res) => {
       const reviews = req.body;
       const result = await reviewCollection.insertOne(reviews);
@@ -66,13 +66,22 @@ async function run() {
       res.send(reviews);
     });
 
+    //review sorting and logic
+    app.get('/reviews/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { serviceId: id };
+      const cursor = reviewCollection.find(query).sort({ _id: -1 });
+      const result = await cursor.toArray();
+      res.send(result)
+    });
+
     //review for deleting
     app.delete('/reviews/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await reviewCollection.deleteOne(query);
       res.send(result)
-    })
+    });
   }
   finally {
   }
