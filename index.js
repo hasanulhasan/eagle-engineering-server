@@ -32,6 +32,12 @@ async function run() {
       const services = await cursor.skip(3).toArray();
       res.send(services);
     });
+    //adding service
+    app.post('/services', async (req, res) => {
+      const services = req.body;
+      const result = await serviceCollection.insertOne(services);
+      res.send(result);
+    });
 
     app.get('/services/:id', async (req, res) => {
       const id = req.params.id;
@@ -59,18 +65,16 @@ async function run() {
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
+
     //review for deleting
     app.delete('/reviews/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await reviewCollection.deleteOne(query);
       res.send(result)
-
     })
-
   }
   finally {
-
   }
 }
 run().catch(e => console.error(e))
